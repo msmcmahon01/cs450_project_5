@@ -935,8 +935,7 @@ InitGraphics( )
 	char* plutofile = (char*)"img/pluto.bmp";
 
 	unsigned char* texture;
-	switch (NowPlanet) {
-		case 1:
+
 			texture = BmpToTexture(earthfile, &width, &height);
 			if (texture == NULL)
 				fprintf(stderr, "Cannot open texture '%s'\n", earthfile);
@@ -944,9 +943,6 @@ InitGraphics( )
 				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", earthfile, width, height);
 			glGenTextures(1, &EarthTex);
 			glBindTexture(GL_TEXTURE_2D, EarthTex);
-			break;
-
-		case 2:
 			texture = BmpToTexture(moonfile, &width, &height);
 			if (texture == NULL)
 				fprintf(stderr, "Cannot open texture '%s'\n", moonfile);
@@ -954,9 +950,6 @@ InitGraphics( )
 				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", moonfile, width, height);
 			glGenTextures(1, &MoonTex);
 			glBindTexture(GL_TEXTURE_2D, MoonTex);
-			break;
-
-		case 3:
 			texture = BmpToTexture(jupiterfile, &width, &height);
 			if (texture == NULL)
 				fprintf(stderr, "Cannot open texture '%s'\n", jupiterfile);
@@ -964,9 +957,6 @@ InitGraphics( )
 				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", jupiterfile, width, height);
 			glGenTextures(1, &JupiterTex);
 			glBindTexture(GL_TEXTURE_2D, JupiterTex);
-			break;
-
-		case 4:
 			texture = BmpToTexture(saturnfile, &width, &height);
 			if (texture == NULL)
 				fprintf(stderr, "Cannot open texture '%s'\n", saturnfile);
@@ -974,9 +964,6 @@ InitGraphics( )
 				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", saturnfile, width, height);
 			glGenTextures(1, &SaturnTex);
 			glBindTexture(GL_TEXTURE_2D, SaturnTex);
-			break;
-
-		case 5:
 			texture = BmpToTexture(uranusfile, &width, &height);
 			if (texture == NULL)
 				fprintf(stderr, "Cannot open texture '%s'\n", uranusfile);
@@ -984,9 +971,6 @@ InitGraphics( )
 				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", uranusfile, width, height);
 			glGenTextures(1, &UranusTex);
 			glBindTexture(GL_TEXTURE_2D, UranusTex);
-			break;
-
-		case 6:
 			texture = BmpToTexture(neptunefile, &width, &height);
 			if (texture == NULL)
 				fprintf(stderr, "Cannot open texture '%s'\n", neptunefile);
@@ -994,9 +978,6 @@ InitGraphics( )
 				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", neptunefile, width, height);
 			glGenTextures(1, &NeptuneTex);
 			glBindTexture(GL_TEXTURE_2D, NeptuneTex);
-			break;
-
-		case 7:
 			texture = BmpToTexture(plutofile, &width, &height);
 			if (texture == NULL)
 				fprintf(stderr, "Cannot open texture '%s'\n", plutofile);
@@ -1004,9 +985,6 @@ InitGraphics( )
 				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", plutofile, width, height);
 			glGenTextures(1, &PlutoTex);
 			glBindTexture(GL_TEXTURE_2D, PlutoTex);
-			break;
-
-		default:
 			texture = BmpToTexture(venusfile, &width, &height);
 			if (texture == NULL)
 				fprintf(stderr, "Cannot open texture '%s'\n", venusfile);
@@ -1014,8 +992,7 @@ InitGraphics( )
 				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", venusfile, width, height);
 			glGenTextures(1, &VenusTex);
 			glBindTexture(GL_TEXTURE_2D, VenusTex);
-			break;
-	}
+
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
