@@ -4,6 +4,7 @@
 #include <math.h>
 #include <ctype.h>
 #include <time.h>
+#include <iostream>
 
 
 #ifndef F_PI
@@ -51,7 +52,7 @@
 
 // title of these windows:
 
-const char *WINDOWTITLE = "OpenGL / GLUT Sample -- Joe Graphics";
+const char *WINDOWTITLE = "CS 450 Project 5 McMahon";
 const char *GLUITITLE   = "User Interface Window";
 
 // what the glui package defines as true and false:
@@ -147,7 +148,7 @@ char * ColorNames[ ] =
 // the color definitions:
 // this order must match the menu order
 
-const GLfloat Colors[ ][3] = 
+const GLfloat Colors[ ][3] =
 {
 	{ 1., 0., 0. },		// red
 	{ 1., 1., 0. },		// yellow
@@ -187,6 +188,9 @@ int		ActiveButton;			// current button that is down
 GLuint	AxesList;				// list to hold the axes
 int		AxesOn;					// != 0 means to draw the axes
 GLuint	BoxList;				// object display list
+GLuint	SphereDL;				// display lists
+GLuint	VenusDL, EarthDL, MoonDL, JupiterDL, SaturnDL, UranusDL, NeptuneDL, PlutoDL;
+GLuint	VenusTex, EarthTex, MoonTex, JupiterTex, SaturnTex, UranusTex, NeptuneTex, PlutoTex;
 int		DebugOn;				// != 0 means to print debugging info
 int		DepthCueOn;				// != 0 means to use intensity depth cueing
 int		DepthBufferOn;			// != 0 means to use the z-buffer
@@ -199,7 +203,8 @@ int		ShadowsOn;				// != 0 means to turn shadows on
 float	Time;					// used for animation, this has a value between 0. and 1.
 int		Xmouse, Ymouse;			// mouse values
 float	Xrot, Yrot;				// rotation angles in degrees
-
+int		NowPlanet;					// current planet
+bool	LightingOn;
 
 // function prototypes:
 
@@ -304,12 +309,12 @@ TimeOfDaySeed( )
 
 // these are here for when you need them -- just uncomment the ones you need:
 
-//#include "setmaterial.cpp"
-//#include "setlight.cpp"
+#include "setmaterial.cpp"
+#include "setlight.cpp"
 #include "osusphere.cpp"
-#include "osucone.cpp"
-#include "osutorus.cpp"
-//#include "bmptotexture.cpp"
+//#include "osucone.cpp"
+//#include "osutorus.cpp"
+#include "bmptotexture.cpp"
 //#include "loadobjfile.cpp"
 //#include "keytime.cpp"
 //#include "glslprogram.cpp"
@@ -440,8 +445,8 @@ Display( )
 
 	// rotate the scene:
 
-	glRotatef( (GLfloat)Yrot, 0.f, 1.f, 0.f );
 	glRotatef( (GLfloat)Xrot, 1.f, 0.f, 0.f );
+	glRotatef( (GLfloat)Yrot, 0.f, 1.f, 0.f );
 
 	// uniformly scale the scene:
 
@@ -479,8 +484,114 @@ Display( )
 
 
 	// draw the box object by calling up its display list:
+	SetPointLight( GL_LIGHT0, 0, 20, 0, 1., 1., 1.);
+	glEnable( GL_LIGHTING );
+	glEnable( GL_LIGHT0 );
+	glEnable( GL_TEXTURE_2D );
 
-	glCallList( BoxList );
+
+	if( NowPlanet == 0 ) {				// Display Venus
+		glBindTexture( GL_TEXTURE_2D, VenusTex );
+
+		if( LightingOn ) {
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		}
+		else {
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		}
+
+		glCallList( VenusDL );
+	}
+	else if ( NowPlanet == 1 ) {		// Display Earth
+		glBindTexture( GL_TEXTURE_2D, EarthTex );
+
+		if (LightingOn) {
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		}
+		else {
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		}
+
+		glCallList( EarthDL );
+	}
+	else if (NowPlanet == 2) {		// Display Moon
+		glBindTexture(GL_TEXTURE_2D, MoonTex);
+
+		if (LightingOn) {
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		}
+		else {
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		}
+
+		glCallList(MoonDL);
+	}
+	else if (NowPlanet == 3) {		// Display Jupiter
+		glBindTexture(GL_TEXTURE_2D, JupiterTex);
+
+		if (LightingOn) {
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		}
+		else {
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		}
+
+		glCallList(JupiterDL);
+	}
+	else if (NowPlanet == 4) {		// Display Saturn
+		glBindTexture(GL_TEXTURE_2D, SaturnTex);
+
+		if (LightingOn) {
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		}
+		else {
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		}
+
+		glCallList(SaturnDL);
+	}
+	else if (NowPlanet == 5) {		// Display Uranus
+		glBindTexture(GL_TEXTURE_2D, UranusTex);
+
+		if (LightingOn) {
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		}
+		else {
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		}
+
+		glCallList(UranusDL);
+	}
+	else if (NowPlanet == 6) {		// Display Neptune
+		glBindTexture(GL_TEXTURE_2D, NeptuneTex);
+
+		if (LightingOn) {
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		}
+		else {
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		}
+
+		glCallList(NeptuneDL);
+	}
+	else if (NowPlanet == 7) {		// Display Pluto
+		glBindTexture(GL_TEXTURE_2D, PlutoTex);
+
+		if (LightingOn) {
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		}
+		else {
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		}
+
+		glCallList(PlutoDL);
+	}
+
+
+	glDisable( GL_TEXTURE_2D );
+	glDisable( GL_LIGHTING );
+
+
 
 #ifdef DEMO_Z_FIGHTING
 	if( DepthFightingOn != 0 )
@@ -633,6 +744,46 @@ DoProjectMenu( int id )
 }
 
 
+void
+DoPlanetMenu( int id ) {
+	NowPlanet = id;
+
+	switch (id) {
+		case 0:
+			std::cout << "Setting planet to Venus" << std::endl;
+			break;
+
+		case 1:
+			std::cout << "Setting planet to Earth" << std::endl;
+			break;
+
+		case 2:
+			std::cout << "Setting satellite to Moon" << std::endl;
+			break;
+
+		case 3:
+			std::cout << "Setting planet to Jupiter" << std::endl;
+			break;
+
+		case 4:
+			std::cout << "Setting planet to Saturn" << std::endl;
+			break;
+
+		case 5:
+			std::cout << "Setting planet to Uranus" << std::endl;
+			break;
+
+		case 6:
+			std::cout << "Setting planet to Neptune" << std::endl;
+			break;
+
+		case 7:
+			std::cout << "Setting planet to Pluto" << std::endl;
+			break;
+	}
+}
+
+
 // use glut to display a string of characters using a raster font:
 
 void
@@ -773,7 +924,105 @@ InitGraphics( )
 #endif
 
 	// all other setups go here, such as GLSLProgram and KeyTime setups:
+	int width, height;
+	char* venusfile = (char*)"img/venus.bmp";
+	char* earthfile = (char*)"img/earth.bmp";
+	char* moonfile = (char*)"img/moon.bmp";
+	char* jupiterfile = (char*)"img/jupiter.bmp";
+	char* saturnfile = (char*)"img/saturn.bmp";
+	char* uranusfile = (char*)"img/uranus.bmp";
+	char* neptunefile = (char*)"img/neptune.bmp";
+	char* plutofile = (char*)"img/pluto.bmp";
 
+	unsigned char* texture;
+	switch (NowPlanet) {
+		case 1:
+			texture = BmpToTexture(earthfile, &width, &height);
+			if (texture == NULL)
+				fprintf(stderr, "Cannot open texture '%s'\n", earthfile);
+			else
+				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", earthfile, width, height);
+			glGenTextures(1, &EarthTex);
+			glBindTexture(GL_TEXTURE_2D, EarthTex);
+			break;
+
+		case 2:
+			texture = BmpToTexture(moonfile, &width, &height);
+			if (texture == NULL)
+				fprintf(stderr, "Cannot open texture '%s'\n", moonfile);
+			else
+				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", moonfile, width, height);
+			glGenTextures(1, &MoonTex);
+			glBindTexture(GL_TEXTURE_2D, MoonTex);
+			break;
+
+		case 3:
+			texture = BmpToTexture(jupiterfile, &width, &height);
+			if (texture == NULL)
+				fprintf(stderr, "Cannot open texture '%s'\n", jupiterfile);
+			else
+				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", jupiterfile, width, height);
+			glGenTextures(1, &JupiterTex);
+			glBindTexture(GL_TEXTURE_2D, JupiterTex);
+			break;
+
+		case 4:
+			texture = BmpToTexture(saturnfile, &width, &height);
+			if (texture == NULL)
+				fprintf(stderr, "Cannot open texture '%s'\n", saturnfile);
+			else
+				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", saturnfile, width, height);
+			glGenTextures(1, &SaturnTex);
+			glBindTexture(GL_TEXTURE_2D, SaturnTex);
+			break;
+
+		case 5:
+			texture = BmpToTexture(uranusfile, &width, &height);
+			if (texture == NULL)
+				fprintf(stderr, "Cannot open texture '%s'\n", uranusfile);
+			else
+				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", uranusfile, width, height);
+			glGenTextures(1, &UranusTex);
+			glBindTexture(GL_TEXTURE_2D, UranusTex);
+			break;
+
+		case 6:
+			texture = BmpToTexture(neptunefile, &width, &height);
+			if (texture == NULL)
+				fprintf(stderr, "Cannot open texture '%s'\n", neptunefile);
+			else
+				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", neptunefile, width, height);
+			glGenTextures(1, &NeptuneTex);
+			glBindTexture(GL_TEXTURE_2D, NeptuneTex);
+			break;
+
+		case 7:
+			texture = BmpToTexture(plutofile, &width, &height);
+			if (texture == NULL)
+				fprintf(stderr, "Cannot open texture '%s'\n", plutofile);
+			else
+				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", plutofile, width, height);
+			glGenTextures(1, &PlutoTex);
+			glBindTexture(GL_TEXTURE_2D, PlutoTex);
+			break;
+
+		default:
+			texture = BmpToTexture(venusfile, &width, &height);
+			if (texture == NULL)
+				fprintf(stderr, "Cannot open texture '%s'\n", venusfile);
+			else
+				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", venusfile, width, height);
+			glGenTextures(1, &VenusTex);
+			glBindTexture(GL_TEXTURE_2D, VenusTex);
+			break;
+	}
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture);
 }
 
 
@@ -795,64 +1044,83 @@ InitLists( )
 
 	// create the object:
 
-	BoxList = glGenLists( 1 );
-	glNewList( BoxList, GL_COMPILE );
+	SphereDL = glGenLists(1);
+	glNewList(SphereDL, GL_COMPILE);
+	OsuSphere(1., 20. , 20.);
+	glEndList();
 
-		glBegin( GL_QUADS );
+	VenusDL = glGenLists(1);
+	glNewList(VenusDL, GL_COMPILE);
+	glBindTexture(GL_TEXTURE_2D, VenusTex);	// VenusTex must have already been created when this is called
+	glPushMatrix();
+	glScalef(0.95f, 0.95f, 0.95f);	// scale of venus sphere, from the table
+	glCallList(SphereDL);			// a dl can call another dl that has been previously created
+	glPopMatrix();
+	glEndList();
 
-			glColor3f( 1., 0., 0. );
+	EarthDL = glGenLists(1);
+	glNewList(EarthDL, GL_COMPILE);
+	glBindTexture(GL_TEXTURE_2D, EarthTex);	// EarthTex must have already been created when this is called
+	glPushMatrix();
+	glScalef(1.f, 1.f, 1.f);	// scale of Earth sphere, from the table
+	glCallList(SphereDL);			// a dl can call another dl that has been previously created
+	glPopMatrix();
+	glEndList();
 
-				glNormal3f( 1., 0., 0. );
-					glVertex3f(  dx, -dy,  dz );
-					glVertex3f(  dx, -dy, -dz );
-					glVertex3f(  dx,  dy, -dz );
-					glVertex3f(  dx,  dy,  dz );
+	MoonDL = glGenLists(1);
+	glNewList(MoonDL, GL_COMPILE);
+	glBindTexture(GL_TEXTURE_2D, MoonTex);	// MoonTex must have already been created when this is called
+	glPushMatrix();
+	glScalef(0.27f, 0.27f, 0.27f);	// scale of Moon sphere, from the table
+	glCallList(SphereDL);			// a dl can call another dl that has been previously created
+	glPopMatrix();
+	glEndList();
 
-				glNormal3f(-1., 0., 0.);
-					glVertex3f( -dx, -dy,  dz);
-					glVertex3f( -dx,  dy,  dz );
-					glVertex3f( -dx,  dy, -dz );
-					glVertex3f( -dx, -dy, -dz );
+	JupiterDL = glGenLists(1);
+	glNewList(JupiterDL, GL_COMPILE);
+	glBindTexture(GL_TEXTURE_2D, JupiterTex);	// JupiterTex must have already been created when this is called
+	glPushMatrix();
+	glScalef(11.21f, 11.21f, 11.21f);	// scale of Jupiter sphere, from the table
+	glCallList(SphereDL);			// a dl can call another dl that has been previously created
+	glPopMatrix();
+	glEndList();
 
-			glColor3f( 0., 1., 0. );
+	SaturnDL = glGenLists(1);
+	glNewList(SaturnDL, GL_COMPILE);
+	glBindTexture(GL_TEXTURE_2D, SaturnTex);	// SaturnTex must have already been created when this is called
+	glPushMatrix();
+	glScalef(9.45f, 9.45f, 9.45f);	// scale of Saturn sphere, from the table
+	glCallList(SphereDL);			// a dl can call another dl that has been previously created
+	glPopMatrix();
+	glEndList();
 
-				glNormal3f(0., 1., 0.);
-					glVertex3f( -dx,  dy,  dz );
-					glVertex3f(  dx,  dy,  dz );
-					glVertex3f(  dx,  dy, -dz );
-					glVertex3f( -dx,  dy, -dz );
+	UranusDL = glGenLists(1);
+	glNewList(UranusDL, GL_COMPILE);
+	glBindTexture(GL_TEXTURE_2D, UranusTex);	// UranusTex must have already been created when this is called
+	glPushMatrix();
+	glScalef(4.01f, 4.01f, 4.01f);	// scale of Uranus sphere, from the table
+	glCallList(SphereDL);			// a dl can call another dl that has been previously created
+	glPopMatrix();
+	glEndList();
 
-				glNormal3f(0., -1., 0.);
-					glVertex3f( -dx, -dy,  dz);
-					glVertex3f( -dx, -dy, -dz );
-					glVertex3f(  dx, -dy, -dz );
-					glVertex3f(  dx, -dy,  dz );
+	NeptuneDL = glGenLists(1);
+	glNewList(NeptuneDL, GL_COMPILE);
+	glBindTexture(GL_TEXTURE_2D, NeptuneTex);	// NeptuneTex must have already been created when this is called
+	glPushMatrix();
+	glScalef(3.88f, 3.88f, 3.88f);	// scale of Neptune sphere, from the table
+	glCallList(SphereDL);			// a dl can call another dl that has been previously created
+	glPopMatrix();
+	glEndList();
 
-			glColor3f(0., 0., 1.);
+	PlutoDL = glGenLists(1);
+	glNewList(PlutoDL, GL_COMPILE);
+	glBindTexture(GL_TEXTURE_2D, PlutoTex);	// PlutoTex must have already been created when this is called
+	glPushMatrix();
+	glScalef(0.19f, 0.19f, 0.19f);	// scale of Pluto sphere, from the table
+	glCallList(SphereDL);			// a dl can call another dl that has been previously created
+	glPopMatrix();
+	glEndList();
 
-				glNormal3f(0., 0., 1.);
-					glVertex3f(-dx, -dy, dz);
-					glVertex3f( dx, -dy, dz);
-					glVertex3f( dx,  dy, dz);
-					glVertex3f(-dx,  dy, dz);
-
-				glNormal3f(0., 0., -1.);
-					glVertex3f(-dx, -dy, -dz);
-					glVertex3f(-dx,  dy, -dz);
-					glVertex3f( dx,  dy, -dz);
-					glVertex3f( dx, -dy, -dz);
-
-		glEnd( );
-#ifdef NOTDEF
-		glColor3f(1., 1., 1.);
-		glBegin(GL_TRIANGLES);
-		glVertex3f(-dx, -dy, dz);
-		glVertex3f(0., -dy, dz + 0.5f);
-		glVertex3f(dx, -dy, dz);
-		glEnd();
-#endif
-
-	glEndList( );
 
 
 	// create the axes:
@@ -907,9 +1175,20 @@ InitMenus( )
 	glutAddMenuEntry( "Orthographic",  ORTHO );
 	glutAddMenuEntry( "Perspective",   PERSP );
 
+	int planetmenu = glutCreateMenu( DoPlanetMenu );
+	glutAddMenuEntry( "Venus",		0 );
+	glutAddMenuEntry( "Earth",		1 );
+	glutAddMenuEntry( "Moon",		2 );
+	glutAddMenuEntry( "Jupiter",	3 );
+	glutAddMenuEntry( "Saturn",		4 );
+	glutAddMenuEntry( "Uranus",		5 );
+	glutAddMenuEntry( "Neptune",	6 );
+	glutAddMenuEntry( "Pluto",		7 );
+
 	int mainmenu = glutCreateMenu( DoMainMenu );
 	glutAddSubMenu(   "Axes",          axesmenu);
 	glutAddSubMenu(   "Axis Colors",   colormenu);
+	glutAddSubMenu(   "Planet",        planetmenu);
 
 #ifdef DEMO_DEPTH_BUFFER
 	glutAddSubMenu(   "Depth Buffer",  depthbuffermenu);
@@ -957,6 +1236,46 @@ Keyboard( unsigned char c, int x, int y )
 			DoMainMenu( QUIT );	// will not return here
 			break;				// happy compiler
 
+		case '1':				// Set planet Venus
+			NowPlanet = 0;
+			std::cout << "Setting planet to Venus" << std::endl;
+			break;
+
+		case '2':				// Set planet Earth
+			NowPlanet = 1;
+			std::cout << "Setting planet to Earth" << std::endl;
+			break;
+
+		case '3':				// Set satellite Moon
+			NowPlanet = 2;
+			std::cout << "Setting satellite to Moon" << std::endl;
+			break;
+
+		case '4':				// Set planet Jupiter
+			NowPlanet = 3;
+			std::cout << "Setting planet to Jupiter" << std::endl;
+			break;
+
+		case '5':				// Set planet Saturn
+			NowPlanet = 4;
+			std::cout << "Setting planet to Saturn" << std::endl;
+			break;
+
+		case '6':				// Set planet Uranus
+			NowPlanet = 5;
+			std::cout << "Setting planet to Uranus" << std::endl;
+			break;
+
+		case '7':				// Set planet Neptune
+			NowPlanet = 6;
+			std::cout << "Setting planet to Neptune" << std::endl;
+			break;
+
+		case '8':				// Set planet Pluto
+			NowPlanet = 7;
+			std::cout << "Setting planet to Pluto" << std::endl;
+			break;
+
 		default:
 			fprintf( stderr, "Don't know what to do with keyboard hit: '%c' (0x%0x)\n", c, c );
 	}
@@ -978,7 +1297,7 @@ MouseButton( int button, int state, int x, int y )
 	if( DebugOn != 0 )
 		fprintf( stderr, "MouseButton: %d, %d, %d, %d\n", button, state, x, y );
 
-	
+
 	// get the proper button bit mask:
 
 	switch( button )
@@ -1080,6 +1399,7 @@ Reset( )
 	NowColor = YELLOW;
 	NowProjection = PERSP;
 	Xrot = Yrot = 0.;
+	NowPlanet = 0;
 }
 
 
@@ -1173,7 +1493,7 @@ Axes( float length )
 			int j = xorder[i];
 			if( j < 0 )
 			{
-				
+
 				glEnd( );
 				glBegin( GL_LINE_STRIP );
 				j = -j;
@@ -1189,7 +1509,7 @@ Axes( float length )
 			int j = yorder[i];
 			if( j < 0 )
 			{
-				
+
 				glEnd( );
 				glBegin( GL_LINE_STRIP );
 				j = -j;
@@ -1205,7 +1525,7 @@ Axes( float length )
 			int j = zorder[i];
 			if( j < 0 )
 			{
-				
+
 				glEnd( );
 				glBegin( GL_LINE_STRIP );
 				j = -j;
@@ -1254,7 +1574,7 @@ HsvRgb( float hsv[3], float rgb[3] )
 	}
 
 	// get an rgb from the hue itself:
-	
+
 	float i = (float)floor( h );
 	float f = h - i;
 	float p = v * ( 1.f - s );
@@ -1267,23 +1587,23 @@ HsvRgb( float hsv[3], float rgb[3] )
 		case 0:
 			r = v;	g = t;	b = p;
 			break;
-	
+
 		case 1:
 			r = q;	g = v;	b = p;
 			break;
-	
+
 		case 2:
 			r = p;	g = v;	b = t;
 			break;
-	
+
 		case 3:
 			r = p;	g = q;	b = v;
 			break;
-	
+
 		case 4:
 			r = t;	g = p;	b = v;
 			break;
-	
+
 		case 5:
 			r = v;	g = p;	b = q;
 			break;
