@@ -490,101 +490,100 @@ Display( )
 	glEnable( GL_TEXTURE_2D );
 
 
-	if( NowPlanet == 0 ) {				// Display Venus
-		glBindTexture( GL_TEXTURE_2D, VenusTex );
+	switch (NowPlanet) {
+		case 1:
+			glBindTexture( GL_TEXTURE_2D, EarthTex );
+			if (LightingOn) {
+				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			}
+			else {
+				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+			}
+			glCallList( EarthDL );
+			break;
 
-		if( LightingOn ) {
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		}
-		else {
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-		}
+		case 2:
+			glBindTexture(GL_TEXTURE_2D, MoonTex);
+			if (LightingOn) {
+				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			}
+			else {
+				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+			}
+			glCallList(MoonDL);
+			break;
 
-		glCallList( VenusDL );
-	}
-	else if ( NowPlanet == 1 ) {		// Display Earth
-		glBindTexture( GL_TEXTURE_2D, EarthTex );
+		case 3:
+			glBindTexture(GL_TEXTURE_2D, JupiterTex);
+			if (LightingOn) {
+				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			}
+			else {
+				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+			}
+			glCallList(JupiterDL);
+			break;
 
-		if (LightingOn) {
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		}
-		else {
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-		}
+		case 4:
+			glBindTexture(GL_TEXTURE_2D, SaturnTex);
+			if (LightingOn) {
+				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			}
+			else {
+				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+			}
+			glCallList(SaturnDL);
+			break;
 
-		glCallList( EarthDL );
-	}
-	else if (NowPlanet == 2) {		// Display Moon
-		glBindTexture(GL_TEXTURE_2D, MoonTex);
+		case 5:
+			glBindTexture(GL_TEXTURE_2D, UranusTex);
 
-		if (LightingOn) {
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		}
-		else {
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-		}
+			if (LightingOn) {
+				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			}
+			else {
+				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+			}
 
-		glCallList(MoonDL);
-	}
-	else if (NowPlanet == 3) {		// Display Jupiter
-		glBindTexture(GL_TEXTURE_2D, JupiterTex);
+			glCallList(UranusDL);
+			break;
 
-		if (LightingOn) {
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		}
-		else {
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-		}
+		case 6:
+			glBindTexture(GL_TEXTURE_2D, NeptuneTex);
 
-		glCallList(JupiterDL);
-	}
-	else if (NowPlanet == 4) {		// Display Saturn
-		glBindTexture(GL_TEXTURE_2D, SaturnTex);
+			if (LightingOn) {
+				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			}
+			else {
+				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+			}
 
-		if (LightingOn) {
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		}
-		else {
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-		}
+			glCallList(NeptuneDL);
+			break;
 
-		glCallList(SaturnDL);
-	}
-	else if (NowPlanet == 5) {		// Display Uranus
-		glBindTexture(GL_TEXTURE_2D, UranusTex);
+		case 7:
+			glBindTexture(GL_TEXTURE_2D, PlutoTex);
 
-		if (LightingOn) {
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		}
-		else {
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-		}
+			if (LightingOn) {
+				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			}
+			else {
+				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+			}
 
-		glCallList(UranusDL);
-	}
-	else if (NowPlanet == 6) {		// Display Neptune
-		glBindTexture(GL_TEXTURE_2D, NeptuneTex);
+			glCallList(PlutoDL);
+			break;
 
-		if (LightingOn) {
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		}
-		else {
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-		}
-
-		glCallList(NeptuneDL);
-	}
-	else if (NowPlanet == 7) {		// Display Pluto
-		glBindTexture(GL_TEXTURE_2D, PlutoTex);
-
-		if (LightingOn) {
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		}
-		else {
-			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-		}
-
-		glCallList(PlutoDL);
+		default:
+			glBindTexture( GL_TEXTURE_2D, VenusTex );
+			if( LightingOn ) {
+				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			}
+			else {
+				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+			}
+			glCallList( VenusDL );
+			break;
 	}
 
 
@@ -832,6 +831,8 @@ ElapsedSeconds( )
 }
 
 
+// initialize the planets
+void InitPlanets(char* file, int planet);
 
 // initialize the glut and OpenGL libraries:
 //	also setup callback functions
@@ -924,75 +925,69 @@ InitGraphics( )
 #endif
 
 	// all other setups go here, such as GLSLProgram and KeyTime setups:
+	InitPlanets((char*)"img/venus.bmp", 0);
+	InitPlanets((char*)"img/earth.bmp", 1);
+	InitPlanets((char*)"img/moon.bmp", 2);
+	InitPlanets((char*)"img/jupiter.bmp", 3);
+	InitPlanets((char*)"img/saturn.bmp", 4);
+	InitPlanets((char*)"img/uranus.bmp", 5);
+	InitPlanets((char*)"img/neptune.bmp", 6);
+	InitPlanets((char*)"img/pluto.bmp", 7);
+
+}
+
+// initialize planets
+void
+InitPlanets(char* file, int planet) {
 	int width, height;
-	char* venusfile = (char*)"img/venus.bmp";
-	char* earthfile = (char*)"img/earth.bmp";
-	char* moonfile = (char*)"img/moon.bmp";
-	char* jupiterfile = (char*)"img/jupiter.bmp";
-	char* saturnfile = (char*)"img/saturn.bmp";
-	char* uranusfile = (char*)"img/uranus.bmp";
-	char* neptunefile = (char*)"img/neptune.bmp";
-	char* plutofile = (char*)"img/pluto.bmp";
-
 	unsigned char* texture;
+	texture = BmpToTexture(file, &width, &height);
+	if (texture == NULL)
+		fprintf(stderr, "Cannot open texture '%s'\n", file);
+	else
+		fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", file, width, height);
 
-			texture = BmpToTexture(earthfile, &width, &height);
-			if (texture == NULL)
-				fprintf(stderr, "Cannot open texture '%s'\n", earthfile);
-			else
-				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", earthfile, width, height);
-			glGenTextures(1, &EarthTex);
-			glBindTexture(GL_TEXTURE_2D, EarthTex);
-			texture = BmpToTexture(moonfile, &width, &height);
-			if (texture == NULL)
-				fprintf(stderr, "Cannot open texture '%s'\n", moonfile);
-			else
-				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", moonfile, width, height);
-			glGenTextures(1, &MoonTex);
-			glBindTexture(GL_TEXTURE_2D, MoonTex);
-			texture = BmpToTexture(jupiterfile, &width, &height);
-			if (texture == NULL)
-				fprintf(stderr, "Cannot open texture '%s'\n", jupiterfile);
-			else
-				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", jupiterfile, width, height);
-			glGenTextures(1, &JupiterTex);
-			glBindTexture(GL_TEXTURE_2D, JupiterTex);
-			texture = BmpToTexture(saturnfile, &width, &height);
-			if (texture == NULL)
-				fprintf(stderr, "Cannot open texture '%s'\n", saturnfile);
-			else
-				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", saturnfile, width, height);
-			glGenTextures(1, &SaturnTex);
-			glBindTexture(GL_TEXTURE_2D, SaturnTex);
-			texture = BmpToTexture(uranusfile, &width, &height);
-			if (texture == NULL)
-				fprintf(stderr, "Cannot open texture '%s'\n", uranusfile);
-			else
-				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", uranusfile, width, height);
-			glGenTextures(1, &UranusTex);
-			glBindTexture(GL_TEXTURE_2D, UranusTex);
-			texture = BmpToTexture(neptunefile, &width, &height);
-			if (texture == NULL)
-				fprintf(stderr, "Cannot open texture '%s'\n", neptunefile);
-			else
-				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", neptunefile, width, height);
-			glGenTextures(1, &NeptuneTex);
-			glBindTexture(GL_TEXTURE_2D, NeptuneTex);
-			texture = BmpToTexture(plutofile, &width, &height);
-			if (texture == NULL)
-				fprintf(stderr, "Cannot open texture '%s'\n", plutofile);
-			else
-				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", plutofile, width, height);
-			glGenTextures(1, &PlutoTex);
-			glBindTexture(GL_TEXTURE_2D, PlutoTex);
-			texture = BmpToTexture(venusfile, &width, &height);
-			if (texture == NULL)
-				fprintf(stderr, "Cannot open texture '%s'\n", venusfile);
-			else
-				fprintf(stderr, "Opened '%s': width = %d ; height = %d\n", venusfile, width, height);
-			glGenTextures(1, &VenusTex);
-			glBindTexture(GL_TEXTURE_2D, VenusTex);
+	switch ( planet ) {
+	case 1:
+		glGenTextures(1, &EarthTex);
+		glBindTexture(GL_TEXTURE_2D, EarthTex);
+		break;
 
+	case 2:
+		glGenTextures(1, &MoonTex);
+		glBindTexture(GL_TEXTURE_2D, MoonTex);
+		break;
+
+	case 3:
+		glGenTextures(1, &JupiterTex);
+		glBindTexture(GL_TEXTURE_2D, JupiterTex);
+		break;
+
+	case 4:
+		glGenTextures(1, &SaturnTex);
+		glBindTexture(GL_TEXTURE_2D, SaturnTex);
+		break;
+
+	case 5:
+		glGenTextures(1, &UranusTex);
+		glBindTexture(GL_TEXTURE_2D, UranusTex);
+		break;
+
+	case 6:
+		glGenTextures(1, &NeptuneTex);
+		glBindTexture(GL_TEXTURE_2D, NeptuneTex);
+		break;
+
+	case 7:
+		glGenTextures(1, &PlutoTex);
+		glBindTexture(GL_TEXTURE_2D, PlutoTex);
+		break;
+
+	default:
+		glGenTextures(1, &VenusTex);
+		glBindTexture(GL_TEXTURE_2D, VenusTex);
+		break;
+	}
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -1037,8 +1032,8 @@ InitLists( )
 
 	EarthDL = glGenLists(1);
 	glNewList(EarthDL, GL_COMPILE);
-	glBindTexture(GL_TEXTURE_2D, EarthTex);	// EarthTex must have already been created when this is called
 	glPushMatrix();
+	glBindTexture(GL_TEXTURE_2D, EarthTex);	// EarthTex must have already been created when this is called
 	glScalef(1.f, 1.f, 1.f);	// scale of Earth sphere, from the table
 	glCallList(SphereDL);			// a dl can call another dl that has been previously created
 	glPopMatrix();
