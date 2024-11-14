@@ -204,7 +204,8 @@ float	Time;					// used for animation, this has a value between 0. and 1.
 int		Xmouse, Ymouse;			// mouse values
 float	Xrot, Yrot;				// rotation angles in degrees
 int		NowPlanet;					// current planet
-bool	LightingOn;
+bool	LightingMode;
+bool	TextureMode;
 
 // function prototypes:
 
@@ -484,104 +485,59 @@ Display( )
 
 
 	// draw the box object by calling up its display list:
-	SetPointLight( GL_LIGHT0, 0, 20, 0, 1., 1., 1.);
-	glEnable( GL_LIGHTING );
-	glEnable( GL_LIGHT0 );
-	glEnable( GL_TEXTURE_2D );
+	if ( TextureMode )
+		glEnable(GL_TEXTURE_2D);
+	else
+		glDisable(GL_TEXTURE_2D);
 
+	if ( LightingMode ) {
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	}
+	else {
+		glDisable(GL_LIGHTING);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+	}
 
 	switch (NowPlanet) {
 		case 1:
 			glBindTexture( GL_TEXTURE_2D, EarthTex );
-			if (LightingOn) {
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-			}
-			else {
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-			}
 			glCallList( EarthDL );
 			break;
 
 		case 2:
 			glBindTexture(GL_TEXTURE_2D, MoonTex);
-			if (LightingOn) {
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-			}
-			else {
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-			}
 			glCallList(MoonDL);
 			break;
 
 		case 3:
 			glBindTexture(GL_TEXTURE_2D, JupiterTex);
-			if (LightingOn) {
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-			}
-			else {
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-			}
 			glCallList(JupiterDL);
 			break;
 
 		case 4:
 			glBindTexture(GL_TEXTURE_2D, SaturnTex);
-			if (LightingOn) {
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-			}
-			else {
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-			}
 			glCallList(SaturnDL);
 			break;
 
 		case 5:
 			glBindTexture(GL_TEXTURE_2D, UranusTex);
-
-			if (LightingOn) {
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-			}
-			else {
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-			}
-
 			glCallList(UranusDL);
 			break;
 
 		case 6:
 			glBindTexture(GL_TEXTURE_2D, NeptuneTex);
-
-			if (LightingOn) {
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-			}
-			else {
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-			}
-
 			glCallList(NeptuneDL);
 			break;
 
 		case 7:
 			glBindTexture(GL_TEXTURE_2D, PlutoTex);
-
-			if (LightingOn) {
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-			}
-			else {
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-			}
-
 			glCallList(PlutoDL);
 			break;
 
 		default:
 			glBindTexture( GL_TEXTURE_2D, VenusTex );
-			if( LightingOn ) {
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-			}
-			else {
-				glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-			}
 			glCallList( VenusDL );
 			break;
 	}
@@ -780,6 +736,40 @@ DoPlanetMenu( int id ) {
 			std::cout << "Setting planet to Pluto" << std::endl;
 			break;
 	}
+}
+
+void
+DoLightingMenu( int id ) {
+	LightingMode = id;
+
+	std::cout << "Toggling Lighting: ";
+	switch ( id ) {
+	case 1:
+		std::cout << "OFF" << std::endl;
+		break;
+	default:
+		std::cout << "ON" << std::endl;
+	}
+
+	glutSetWindow(MainWindow);
+	glutPostRedisplay();
+}
+
+void
+DoTextureMenu( int id) {
+	TextureMode = id;
+
+	std::cout << "Toggling Textures: ";
+	switch ( TextureMode ) {
+	case 0:
+		std::cout << "OFF" << std::endl;
+		break;
+	default:
+		std::cout << "ON" << std::endl;
+	}
+
+	glutSetWindow(MainWindow);
+	glutPostRedisplay();
 }
 
 
@@ -1157,10 +1147,20 @@ InitMenus( )
 	glutAddMenuEntry( "Neptune",	6 );
 	glutAddMenuEntry( "Pluto",		7 );
 
+	int lightingmenu = glutCreateMenu( DoLightingMenu );
+	glutAddMenuEntry( "On",		1 );
+	glutAddMenuEntry( "Off",	0 );
+
+	int texturemenu = glutCreateMenu( DoTextureMenu );
+	glutAddMenuEntry( "On",		1 );
+	glutAddMenuEntry( "Off",	0 );
+
 	int mainmenu = glutCreateMenu( DoMainMenu );
-	glutAddSubMenu(   "Axes",          axesmenu);
-	glutAddSubMenu(   "Axis Colors",   colormenu);
-	glutAddSubMenu(   "Planet",        planetmenu);
+	glutAddSubMenu( "Axes",          axesmenu );
+	glutAddSubMenu( "Axis Colors",   colormenu );
+	glutAddSubMenu( "Planet",        planetmenu );
+	glutAddSubMenu( "Lighting",      lightingmenu );
+	glutAddSubMenu( "Texture",       texturemenu );
 
 #ifdef DEMO_DEPTH_BUFFER
 	glutAddSubMenu(   "Depth Buffer",  depthbuffermenu);
@@ -1246,6 +1246,32 @@ Keyboard( unsigned char c, int x, int y )
 		case '8':				// Set planet Pluto
 			NowPlanet = 7;
 			std::cout << "Setting planet to Pluto" << std::endl;
+			break;
+
+		case 'l':
+		case 'L':
+			LightingMode = !LightingMode;
+			std::cout << "Toggling Lighting: ";
+			switch ( LightingMode ) {
+				case 1:
+					std::cout << "OFF" << std::endl;
+					break;
+				default:
+					std::cout << "ON" << std::endl;
+			}
+			break;
+
+		case 't':
+		case 'T':
+			TextureMode = !TextureMode;
+			std::cout << "Toggling Textures: ";
+			switch ( TextureMode ) {
+			case 0:
+				std::cout << "OFF" << std::endl;
+				break;
+			default:
+				std::cout << "ON" << std::endl;
+			}
 			break;
 
 		default:
@@ -1372,6 +1398,8 @@ Reset( )
 	NowProjection = PERSP;
 	Xrot = Yrot = 0.;
 	NowPlanet = 0;
+	LightingMode = 0;
+	TextureMode = 1;
 }
 
 
