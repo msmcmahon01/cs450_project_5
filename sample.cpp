@@ -206,6 +206,7 @@ float	Xrot, Yrot;				// rotation angles in degrees
 int		NowPlanet;					// current planet
 bool	LightingMode;
 bool	TextureMode;
+bool	Frozen;
 
 // function prototypes:
 
@@ -317,9 +318,11 @@ TimeOfDaySeed( )
 //#include "osutorus.cpp"
 #include "bmptotexture.cpp"
 //#include "loadobjfile.cpp"
-//#include "keytime.cpp"
+#include "keytime.cpp"
 //#include "glslprogram.cpp"
 //#include "vertexbufferobject.cpp"
+
+Keytimes	Xpos1, Zpos1;
 
 
 // main program:
@@ -490,6 +493,16 @@ Display( )
 	else
 		glDisable(GL_TEXTURE_2D);
 
+	// Turn # msec into the cycle ( 0 - MSEC - 1 ):
+	int msec = glutGet(GLUT_ELAPSED_TIME) % 10000;	// 0-9999
+
+	// Turn that into a time in seconds
+	float nowTime = ((float)msec / 10000.) * 10;		// 0.-10.
+
+	int lighty = 0;
+
+	SetPointLight( GL_LIGHT0, Xpos1.GetValue(nowTime), lighty, Zpos1.GetValue(nowTime), 1., 1., 1.);
+
 	if ( LightingMode ) {
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT0);
@@ -545,6 +558,12 @@ Display( )
 
 	glDisable( GL_TEXTURE_2D );
 	glDisable( GL_LIGHTING );
+
+	glPushMatrix();
+	glColor3f(1., 1., 1.);
+	glTranslatef(Xpos1.GetValue(nowTime), lighty, Zpos1.GetValue(nowTime));
+	OsuSphere(0.5, 20, 20);
+	glPopMatrix();
 
 
 
@@ -924,6 +943,36 @@ InitGraphics( )
 	InitPlanets((char*)"img/neptune.bmp", 6);
 	InitPlanets((char*)"img/pluto.bmp", 7);
 
+
+	Xpos1.Init();
+	Xpos1.AddTimeValue(0.0f, 8 * sinf(12 * (2 * M_PI / 12)));
+	Xpos1.AddTimeValue(10.0f, 8 * sinf(12 * (2 * M_PI / 12)));
+	Xpos1.AddTimeValue(9.17f, 8 * sinf(1 * (2 * M_PI / 12)));
+	Xpos1.AddTimeValue(8.33f, 8 * sinf(2 * (2 * M_PI / 12)));
+	Xpos1.AddTimeValue(7.50f, 8 * sinf(3 * (2 * M_PI / 12)));
+	Xpos1.AddTimeValue(6.67f, 8 * sinf(4 * (2 * M_PI / 12)));
+	Xpos1.AddTimeValue(5.83f, 8 * sinf(5 * (2 * M_PI / 12)));
+	Xpos1.AddTimeValue(5.00f, 8 * sinf(6 * (2 * M_PI / 12)));
+	Xpos1.AddTimeValue(4.17f, 8 * sinf(7 * (2 * M_PI / 12)));
+	Xpos1.AddTimeValue(3.33f, 8 * sinf(8 * (2 * M_PI / 12)));
+	Xpos1.AddTimeValue(2.50f, 8 * sinf(9 * (2 * M_PI / 12)));
+	Xpos1.AddTimeValue(1.67f, 8 * sinf(10 * (2 * M_PI / 12)));
+	Xpos1.AddTimeValue(0.83f, 8 * sinf(11 * (2 * M_PI / 12)));
+
+	Zpos1.Init();
+	Zpos1.AddTimeValue(0.0f, 8 * cosf(12 * (2 * M_PI / 12)));
+	Zpos1.AddTimeValue(10.0f, 8 * cosf(12 * (2 * M_PI / 12)));
+	Zpos1.AddTimeValue(9.17f, 8 * cosf(1 * (2 * M_PI / 12)));
+	Zpos1.AddTimeValue(8.33f, 8 * cosf(2 * (2 * M_PI / 12)));
+	Zpos1.AddTimeValue(7.50f, 8 * cosf(3 * (2 * M_PI / 12)));
+	Zpos1.AddTimeValue(6.67f, 8 * cosf(4 * (2 * M_PI / 12)));
+	Zpos1.AddTimeValue(5.83f, 8 * cosf(5 * (2 * M_PI / 12)));
+	Zpos1.AddTimeValue(5.00f, 8 * cosf(6 * (2 * M_PI / 12)));
+	Zpos1.AddTimeValue(4.17f, 8 * cosf(7 * (2 * M_PI / 12)));
+	Zpos1.AddTimeValue(3.33f, 8 * cosf(8 * (2 * M_PI / 12)));
+	Zpos1.AddTimeValue(2.50f, 8 * cosf(9 * (2 * M_PI / 12)));
+	Zpos1.AddTimeValue(1.67f, 8 * cosf(10 * (2 * M_PI / 12)));
+	Zpos1.AddTimeValue(0.83f, 8 * cosf(11 * (2 * M_PI / 12)));
 }
 
 // initialize planets
@@ -1271,6 +1320,19 @@ Keyboard( unsigned char c, int x, int y )
 				break;
 			default:
 				std::cout << "ON" << std::endl;
+			}
+			break;
+
+		case 'f':
+		case 'F':
+			Frozen = !Frozen;
+			if (Frozen) {
+				glutIdleFunc(NULL);
+				std::cout << "Freezing Animation." << std::endl;
+			}
+			else {
+				glutIdleFunc(Animate);
+				std::cout << "Animating Animation." << std::endl;
 			}
 			break;
 
