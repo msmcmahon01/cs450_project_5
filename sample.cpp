@@ -207,6 +207,7 @@ int		NowPlanet;					// current planet
 bool	LightingMode;
 bool	TextureMode;
 bool	Frozen;
+float	TimeFrozen, TimeUnfrozen, TimeElapsed;
 
 // function prototypes:
 
@@ -493,15 +494,12 @@ Display( )
 	else
 		glDisable(GL_TEXTURE_2D);
 
-	// Turn # msec into the cycle ( 0 - MSEC - 1 ):
-	int msec = glutGet(GLUT_ELAPSED_TIME) % 10000;	// 0-9999
-
-	// Turn that into a time in seconds
-	float nowTime = ((float)msec / 10000.) * 10;		// 0.-10.
-
 	int lighty = 0;
+	float time = Time - TimeElapsed;
+	if (time < 0.f)
+		time = time + 1.f;
 
-	SetPointLight( GL_LIGHT0, Xpos1.GetValue(nowTime), lighty, Zpos1.GetValue(nowTime), 1., 1., 1.);
+	SetPointLight( GL_LIGHT0, Xpos1.GetValue(time * 10), lighty, Zpos1.GetValue(time * 10), 1., 1., 1.);
 
 	if ( LightingMode ) {
 		glEnable(GL_LIGHTING);
@@ -561,7 +559,7 @@ Display( )
 
 	glPushMatrix();
 	glColor3f(1., 1., 1.);
-	glTranslatef(Xpos1.GetValue(nowTime), lighty, Zpos1.GetValue(nowTime));
+	glTranslatef(Xpos1.GetValue(time * 10), lighty, Zpos1.GetValue(time * 10));
 	OsuSphere(0.5, 20, 20);
 	glPopMatrix();
 
@@ -1328,10 +1326,20 @@ Keyboard( unsigned char c, int x, int y )
 			Frozen = !Frozen;
 			if (Frozen) {
 				glutIdleFunc(NULL);
+				TimeFrozen = Time - TimeElapsed;
+				if (TimeFrozen < 0.f)
+					TimeFrozen = TimeFrozen + 1.f;
 				std::cout << "Freezing Animation." << std::endl;
 			}
 			else {
 				glutIdleFunc(Animate);
+				int ms = glutGet(GLUT_ELAPSED_TIME);
+				ms %= MS_PER_CYCLE;
+				Time = (float)ms / (float)MS_PER_CYCLE;
+				TimeUnfrozen = Time;
+				TimeElapsed = TimeUnfrozen - TimeFrozen;
+				if (TimeElapsed < 0.f)
+					TimeElapsed = TimeElapsed + 1.f;
 				std::cout << "Animating Animation." << std::endl;
 			}
 			break;
@@ -1462,6 +1470,7 @@ Reset( )
 	NowPlanet = 0;
 	LightingMode = 0;
 	TextureMode = 1;
+	TimeElapsed = 0.f;
 }
 
 
